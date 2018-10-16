@@ -1,0 +1,42 @@
+# Licensed Materials - Property of IBM
+# 5737-E67
+# @ Copyright IBM Corporation 2016, 2018 All Rights Reserved
+# US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+
+---
+
+- name: Getting proxy internal address
+  set_fact:
+    proxy_internal_address: "{% if proxy_num|int > 1 and proxy_vip != '127.0.1.1' %}{{ proxy_vip }}{% elif proxy_num|int > 1 %}{{ proxy_lb_address }}{% else %}{{ proxy_nodes[0] }}{% endif %}"
+
+- name: Getting proxy external address
+  set_fact:
+    proxy_external_address: "{% if proxy_lb_address != 'none' %}{{ proxy_lb_address }}{% else %}{{ proxy_internal_address }}{% endif %}"
+
+- name: Getting cluster internal address
+  set_fact:
+    cluster_internal_address: "{% if master_num|int > 1 and cluster_vip != '127.0.1.1' %}{{ cluster_vip }}{% elif master_num|int > 1 %}{{ cluster_lb_address }}{% else %}{{ master_nodes[0] }}{% endif %}"
+
+- name: Getting cluster external address
+  set_fact:
+    cluster_external_address: "{% if cluster_lb_address != 'none' %}{{ cluster_lb_address }}{% else %}{{ cluster_internal_address }}{% endif %}"
+
+- name: Getting Kubernetes apiserver url
+  set_fact:
+    kubernetes_apiserver_url: "https://{{ cluster_internal_address }}:{{ kube_apiserver_secure_port }}"
+
+- name: Setting cloud provider flags
+  set_fact:
+    cloud_provider_conf: "{% if cloud_provider in ['vsphere', 'azure'] %}/etc/cfc/conf/{{ cloud_provider }}_cloud_conf{% endif %}"
+
+- name: Setting MariaDB info
+  set_fact: mariadb_password="{{ default_mariadb_password | default((cluster_internal_address+'mariadb') | hash('md5')) }}"
+
+- name: Setting WLP Client ID
+  set_fact: wlp_client_id="{{ (cluster_internal_address+'id') | hash('md5') }}"
+
+- name: Setting WLP Client Secret
+  set_fact: wlp_client_secret="{{ (cluster_internal_address+'secret') | hash('md5') }}"
+
+- name: Setting WLP OAuth2 Client Registration Password
+  set_fact: wlp_client_registration_secret="{{ (cluster_internal_address+'wlp_client_registration_password') | hash('md5') }}"

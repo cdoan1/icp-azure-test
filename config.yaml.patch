@@ -1,0 +1,14 @@
+--- /installer/playbook/roles/master/tasks/config.yaml
++++ config.yaml
+@@ -41,6 +41,11 @@
+ - name: Ensuring that Kubernetes configuration file for Kubernetes controller manager exist
+   template: src=conf/kube-controller-manager-config.yaml.j2 dest=/etc/cfc/conf/kube-controller-manager-config.yaml mode=0600
+ 
++- name: Ensuring that Cloud Provider configuration file for Kuberenetes controller manager exist
++  template: src=conf/{{ cloud_provider }}_cloud_conf-controller.j2 dest={{ cloud_provider_conf }}-controller mode=0600
++  when:
++    - cloud_provider in ['azure']
++
+ - name: Ensuring that Kubernetes configuration file for Kubernetes scheduler exist
+   template: src=conf/kube-scheduler-config.yaml.j2 dest=/etc/cfc/conf/kube-scheduler-config.yaml mode=0600
+ 

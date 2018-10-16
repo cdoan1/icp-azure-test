@@ -1,0 +1,11 @@
+--- /installer/playbook/roles/common/tasks/always.yaml
++++ always.yaml
+@@ -27,7 +27,7 @@
+ 
+ - name: Setting cloud provider flags
+   set_fact:
+-    cloud_provider_conf: "{% if cloud_provider == 'vsphere' %}/etc/cfc/conf/{{ cloud_provider }}_cloud_conf{% endif %}"
++    cloud_provider_conf: "{% if cloud_provider in ['vsphere', 'azure'] %}/etc/cfc/conf/{{ cloud_provider }}_cloud_conf{% endif %}"
+ 
+ - name: Setting MariaDB info
+   set_fact: mariadb_password="{{ default_mariadb_password | default((cluster_internal_address+'mariadb') | hash('md5')) }}"

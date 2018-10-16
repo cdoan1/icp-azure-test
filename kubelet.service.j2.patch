@@ -1,0 +1,11 @@
+--- /installer/playbook/roles/kubelet/templates/kubelet.service.j2
++++ kubelet.service.j2
+@@ -20,7 +20,7 @@
+   --pod-infra-container-image={{ pause_image }} \
+   {% if cloud_provider != 'none' -%}
+   --cloud-provider={{ cloud_provider }} \
+-  {% if inventory_hostname in groups['master'] -%}
++  {% if ((inventory_hostname in groups['master']) or (cloud_provider == "azure")) -%}
+   --cloud-config={{ cloud_provider_conf }} \
+   {% endif -%}
+   {% endif -%}

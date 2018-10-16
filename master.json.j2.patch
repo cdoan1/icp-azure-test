@@ -1,0 +1,11 @@
+--- /installer/playbook/roles/master/templates/pods/master.json.j2
++++ master.json.j2
+@@ -40,7 +40,7 @@
+           {% endif -%}
+           {% if cloud_provider != 'none' -%}
+           "--cloud-provider={{ cloud_provider }}",
+-          "--cloud-config={{ cloud_provider_conf }}",
++          "--cloud-config={{ cloud_provider_conf }}{% if cloud_provider == 'azure' -%}-controller{% endif -%}",
+           {% endif -%}
+           "--leader-elect=true",
+           "--profiling=false",

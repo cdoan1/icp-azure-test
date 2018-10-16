@@ -1,0 +1,26 @@
+# Licensed Materials - Property of IBM
+# 5737-E67
+# @ Copyright IBM Corporation 2016, 2018 All Rights Reserved
+# US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+
+---
+
+- name: Checking if Cgroup Driver of docker is set to systemd
+  shell: docker info | awk '/^Cgroup Driver:/ {print $NF}'
+  args:
+    executable: /bin/bash
+  register: info
+  changed_when: false
+
+- name: Getting cgdriver flag
+  set_fact: cgdriver="{{ info.stdout }}"
+
+- name: Creating cloud provider conf directory
+  file: path=/etc/cfc/conf state=directory mode=0700
+  when: (inventory_hostname in master_nodes and cloud_provider in ['vsphere']) or
+        (cloud_provider in ['azure'])
+
+- name: Creating Cloud Provider config file
+  template: src={{ cloud_provider }}_cloud_conf.j2 dest={{ cloud_provider_conf }} mode=0600
+  when: (inventory_hostname in master_nodes and cloud_provider in ['vsphere']) or
+        (cloud_provider in ['azure'])

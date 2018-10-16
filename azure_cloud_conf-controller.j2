@@ -1,0 +1,1 @@
+{{ azure_conf['cluster_conf'] | combine(azure_conf['auth'], azure_conf['controller_auth']) | to_nice_json() }}

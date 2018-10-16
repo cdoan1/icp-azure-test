@@ -1,0 +1,2 @@
+
+{{ azure_conf['auth'] | combine(azure_conf['kubelet_auth']) | to_nice_json() }}

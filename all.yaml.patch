@@ -1,0 +1,22 @@
+--- /installer/playbook/group_vars/all.yaml
++++ all.yaml
+@@ -197,6 +197,10 @@
+     calico_ip_autodetection_method: "{{ calico_ip_autodetection_method }}"
+     etcd_config: "{{ cluster_etcd_config }}"
+     etcd_secret: "{{ cluster_etcd_secret }}"
++    calico_networking_backend: "{{ calico_networking_backend | default('bird') }}"
++    ipam_type: "{{ calico_ipam_type | default('calico-ipam') }}"
++    ipam_subnet: "{{ calico_ipam_subnet | default('') }}"
++    cluster_type: "{{ calico_cluster_type | default('k8s,bgp') }}"
+   Node:
+     Tolerations: ""
+     resources:
+@@ -1213,7 +1217,7 @@
+ 
+ # Network type [ calico, nsx-t ]
+ network_type: calico
+-network_helm_chart_path: "{{ (network_type == 'calico') | ternary('/addon/calico-3.1.0.tgz', '/addon/nsx-t-container-plugin-3.1.0.tgz') }}"
++network_helm_chart_path: "/addon/calico-1.1.1.tgz"
+ 
+ # Network in IPv4 CIDR format
+ network_cidr: 10.1.0.0/16

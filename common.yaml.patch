@@ -1,0 +1,19 @@
+--- /installer/playbook/roles/kubelet/tasks/common.yaml
++++ common.yaml
+@@ -17,12 +17,10 @@
+ 
+ - name: Creating cloud provider conf directory
+   file: path=/etc/cfc/conf state=directory mode=0700
+-  when:
+-    - inventory_hostname in master_nodes
+-    - cloud_provider in ['vsphere']
++  when: (inventory_hostname in master_nodes and cloud_provider in ['vsphere']) or
++        (cloud_provider in ['azure'])
+ 
+ - name: Creating Cloud Provider config file
+   template: src={{ cloud_provider }}_cloud_conf.j2 dest={{ cloud_provider_conf }} mode=0600
+-  when:
+-    - inventory_hostname in master_nodes
+-    - cloud_provider in ['vsphere']
++  when: (inventory_hostname in master_nodes and cloud_provider in ['vsphere']) or
++        (cloud_provider in ['azure'])
