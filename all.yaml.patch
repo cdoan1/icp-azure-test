@@ -11,12 +11,3 @@
    Node:
      Tolerations: ""
      resources:
-@@ -1213,7 +1217,7 @@
- 
- # Network type [ calico, nsx-t ]
- network_type: calico
--network_helm_chart_path: "{{ (network_type == 'calico') | ternary('/addon/calico-3.1.0.tgz', '/addon/nsx-t-container-plugin-3.1.0.tgz') }}"
-+network_helm_chart_path: "/addon/calico-1.1.1.tgz"
- 
- # Network in IPv4 CIDR format
- network_cidr: 10.1.0.0/16
